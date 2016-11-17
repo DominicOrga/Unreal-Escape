@@ -5,8 +5,7 @@
 
 
 // Sets default values for this component's properties
-UDoorOpen::UDoorOpen()
-{
+UDoorOpen::UDoorOpen() {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
@@ -17,8 +16,7 @@ UDoorOpen::UDoorOpen()
 
 
 // Called when the game starts
-void UDoorOpen::BeginPlay()
-{
+void UDoorOpen::BeginPlay() {
 	Super::BeginPlay();
 
 	AuthorizedActor = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -26,12 +24,10 @@ void UDoorOpen::BeginPlay()
 
 
 // Called every frame
-void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
-{
+void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	if(PressurePlate->IsOverlappingActor(AuthorizedActor)) 
-	{
+	if (PressurePlate != NULL && PressurePlate->IsOverlappingActor(AuthorizedActor)) {
 		OpenDoor();
 	}
 	// ...

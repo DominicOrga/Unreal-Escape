@@ -5,7 +5,6 @@
 #include "Components/ActorComponent.h"
 #include "DoorOpen.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALESCAPE_API UDoorOpen : public UActorComponent
 {
@@ -16,10 +15,18 @@ private:
 	float OpenAngle = -90.f;
 
 	UPROPERTY(EditAnywhere)
+	float DoorCloseDelay = 1.f;
+
+	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
+
+	float LastTimeDoorOpened;
+
+	bool bIsDoorOpen = false;
 
 	// A pawn authorized to open the door
 	AActor* AuthorizedActor;
+
 
 public:	
 	// Sets default values for this component's properties
@@ -33,4 +40,7 @@ public:
 
 	// Opens the door
 	void OpenDoor();
+
+	// Closes the door
+	void CloseDoor();
 };

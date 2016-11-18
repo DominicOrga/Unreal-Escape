@@ -36,9 +36,9 @@ void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 		// Checks if the door is open and closes it after a specified amount of time
 		if (bIsDoorOpen) {
 			float CurrentTime = GetWorld()->GetTimeSeconds();
-			float DeltaTime = CurrentTime - LastTimeDoorOpened;
+			float ElapsedTime = CurrentTime - LastTimeDoorOpened;
 
-			if (DeltaTime >= DoorCloseDelay) {
+			if (ElapsedTime >= DoorCloseDelay) {
 				CloseDoor();
 			}
 		}

@@ -5,7 +5,8 @@
 
 
 // Sets default values for this component's properties
-UDoorOpen::UDoorOpen() {
+UDoorOpen::UDoorOpen() 
+{
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
@@ -14,7 +15,8 @@ UDoorOpen::UDoorOpen() {
 
 
 // Called when the game starts
-void UDoorOpen::BeginPlay() {
+void UDoorOpen::BeginPlay() 
+{
 	Super::BeginPlay();
 
 	AuthorizedActor = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -23,7 +25,8 @@ void UDoorOpen::BeginPlay() {
 
 
 // Called every frame
-void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) {
+void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) 
+{
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	if (PressurePlate != NULL) {
@@ -33,23 +36,24 @@ void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 		// Checks if the door is open and closes it after a specified amount of time
 		if (bIsDoorOpen) {
 			float CurrentTime = GetWorld()->GetTimeSeconds();
-			
-			if (CurrentTime - LastTimeDoorOpened >= DoorCloseDelay) {
+			float DeltaTime = CurrentTime - LastTimeDoorOpened;
+
+			if (DeltaTime >= DoorCloseDelay) {
 				CloseDoor();
 			}
 		}
 	}
 }
 
-// Opens the door
-void UDoorOpen::OpenDoor() {
+void UDoorOpen::OpenDoor() 
+{
 	GetOwner()->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
 	LastTimeDoorOpened = GetWorld()->GetTimeSeconds();
 	bIsDoorOpen = true;
 }
 
-// Closes the door
-void UDoorOpen::CloseDoor() {
+void UDoorOpen::CloseDoor() 
+{
 	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 	bIsDoorOpen = false;
 }

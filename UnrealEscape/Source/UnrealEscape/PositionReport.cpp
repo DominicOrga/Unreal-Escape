@@ -36,4 +36,3 @@ void UPositionReport::TickComponent( float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
-

@@ -12,3 +12,4 @@ UnrealEscape/Content/StarterContent/
 *.VC.opendb
 *.VC.db
 *.suo
+*.ipch

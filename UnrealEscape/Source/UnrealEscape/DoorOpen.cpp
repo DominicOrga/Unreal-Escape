@@ -57,4 +57,3 @@ void UDoorOpen::CloseDoor()
 	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 	bIsDoorOpen = false;
 }
-

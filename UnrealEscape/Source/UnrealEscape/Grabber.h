@@ -5,7 +5,6 @@
 #include "Components/ActorComponent.h"
 #include "Grabber.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALESCAPE_API UGrabber : public UActorComponent
 {

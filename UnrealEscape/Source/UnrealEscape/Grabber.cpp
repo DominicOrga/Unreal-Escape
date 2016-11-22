@@ -28,6 +28,23 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	DrawLineTraceDebugLine();
+
+	// Update the grabbed component location based on the end of the line trace.
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		FVector PlayerViewPointLocation;
+		FRotator PlayerViewPointRotation;
+
+		// Get a copy of the player view point
+		GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+			OUT PlayerViewPointLocation,
+			OUT PlayerViewPointRotation);
+
+		// Represents the end of the line trace
+		FVector LineEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+
+		PhysicsHandle->SetTargetLocation(LineEnd);
+	}
 }
 
 // Grab the object in reach.
@@ -38,6 +55,15 @@ void UGrabber::Grab()
 	FHitResult Hit;
 
 	GetFirstPhysicsBodyInReach(Hit);
+
+	AActor* HitActor = Hit.GetActor();
+
+	// If an object is hit, then grab it.
+	if (HitActor)
+	{
+		UPrimitiveComponent* ComponentToGrab = Hit.GetComponent();
+		PhysicsHandle->GrabComponent(ComponentToGrab, EName::NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), false);
+	}
 }
 
 // Release the grabbed object.
@@ -78,9 +104,9 @@ void UGrabber::SetupInputComponent()
 }
 
 /**
-* Run a line trace (Ray Cast) to find out the first physics object in reach.
-* @param Hit - A reference variable passed with a new hit object (if any).
-*/
+ * Run a line trace (Ray Cast) to find out the first physics object in reach.
+ * @param Hit - A reference variable passed with a new hit object (if any).
+ */
 void UGrabber::GetFirstPhysicsBodyInReach(FHitResult& Hit)
 {
 	FVector PlayerViewPointLocation;

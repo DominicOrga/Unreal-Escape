@@ -70,6 +70,7 @@ void UGrabber::Grab()
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Object Released"));
+	PhysicsHandle->ReleaseComponent();
 }
 
 // Find the physics handle component

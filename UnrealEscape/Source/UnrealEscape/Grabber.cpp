@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "UnrealEscape.h"
 #include "Grabber.h"
 
@@ -20,48 +18,81 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Grabber initialized."));
-	// ...
-	
+	SetupPhysicsHandleComponent();
+	SetupInputComponent();
 }
-
 
 // Called every frame
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	DrawLineTraceDebugLine();
+}
+
+// Grab the object in reach.
+void UGrabber::Grab() 
+{ 
+	UE_LOG(LogTemp, Warning, TEXT("Grabbed"));
+	
+	FHitResult Hit;
+
+	GetFirstPhysicsBodyInReach(Hit);
+}
+
+// Release the grabbed object.
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Object Released"));
+}
+
+// Find the physics handle component
+void UGrabber::SetupPhysicsHandleComponent() 
+{
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	if (PhysicsHandle)
+	{
+		// todo
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Physics Component Handle Cannot be Found."));
+	}
+}
+
+// Look for the attached input component (Appears at run time).
+void UGrabber::SetupInputComponent()
+{
+	Input = GetOwner()->FindComponentByClass<UInputComponent>();
+
+	if (Input)
+	{
+		Input->BindAction("Grab", EInputEvent::IE_Pressed, this, &UGrabber::Grab);
+		Input->BindAction("Grab", EInputEvent::IE_Released, this, &UGrabber::Release);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Input Component Cannot be Found."));
+	}
+}
+
+/**
+* Run a line trace (Ray Cast) to find out the first physics object in reach.
+* @param Hit - A reference variable passed with a new hit object (if any).
+*/
+void UGrabber::GetFirstPhysicsBodyInReach(FHitResult& Hit)
+{
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 
-	// Gets a copy of the player view point
+	// Get a copy of the player view point
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		OUT PlayerViewPointLocation, 
+		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation);
 
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"), 
-		*PlayerViewPointLocation.ToString(), 
-		*PlayerViewPointRotation.ToString()
-	);
-
-	// Represents the end of the grab reachability
+	// Represents the end of the line trace
 	FVector LineEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
-
-	// Draws a debug line to visualize grab reachability
-	DrawDebugLine(
-		GetWorld(), 
-		PlayerViewPointLocation, 
-		LineEnd, 
-		FColor(255, 0, 0), 
-		false, 
-		0.f, 
-		0.f, 
-		10.f
-	);
-
-	// The colliding object
-	FHitResult Hit;
 
 	// Line Trace (A.K.A. Ray Cast) to detect collision
 	GetWorld()->LineTraceSingleByObjectType(
@@ -72,9 +103,35 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 		FCollisionQueryParams(FName(TEXT("")), false, GetOwner())
 	);
 
-	// Logs the object returned by the line trace
 	AActor* HitActor = Hit.GetActor();
-	if (HitActor != NULL) {
-		UE_LOG(LogTemp, Warning, TEXT("Line Trace Hit: %s"), *(HitActor->GetName()));
+
+	if (HitActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Line Trace Hit: %s"), *HitActor->GetName());
 	}
+}
+
+// Draw a line trace debug line to show its range.
+void UGrabber::DrawLineTraceDebugLine()
+{
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+
+	// Get a copy of the player view point
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation);
+
+	FVector LineEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+
+	DrawDebugLine(
+		GetWorld(),
+		PlayerViewPointLocation,
+		LineEnd,
+		FColor(255, 0, 0),
+		false,
+		0.f,
+		0.f,
+		10.f
+	);
 }

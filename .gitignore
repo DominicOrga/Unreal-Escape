@@ -1,4 +1,6 @@
-# Unreal Engine Generated Files
+#################################
+# Unreal Engine Generated Files #
+#################################
 
 */Binaries/
 */Build/
@@ -7,9 +9,12 @@
 */Saved/
 UnrealEscape/Content/StarterContent/
 
-# Visual Studio Generated Files
+#################################
+# Visual Studio Generated Files #
+#################################
 
 *.VC.opendb
 *.VC.db
 *.suo
 *.ipch
+*.sln

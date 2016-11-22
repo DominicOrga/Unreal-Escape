@@ -10,7 +10,7 @@ class UNREALESCAPE_API UGrabber : public UActorComponent
 
 private:
 	UPROPERTY(EditAnywhere)
-		float Reach = 100.f;	// The range of reachability
+		float Reach = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
@@ -27,14 +27,19 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 private:
-	// Grab the object in reach.
+	/** Grab the object in reach. */
 	void Grab();
 
-	// Release the grabbed object.
+	/** Release the grabbed object. */
 	void Release();
 
+	/** Find a physics handle component from the same owner, if one exists. */
 	void SetupPhysicsHandleComponent();
 	
+	/** 
+	 * Find an input component from the same owner and appropriately bind actions unto it.
+	 * Note: Input component is generated at run time.
+	 */
 	void SetupInputComponent();
 
 	/**
@@ -45,4 +50,14 @@ private:
 
 	// Draw a line trace debug line to show its range.
 	void DrawLineTraceDebugLine();
+
+	/**
+	 * @return the starting vector location of the grab reach line.
+	 */
+	FVector GetGrabReachLineStart();
+
+	/**
+	 * @return the end vector location of the grab reach line.
+	 */
+	FVector GetGrabReachLineEnd();
 };

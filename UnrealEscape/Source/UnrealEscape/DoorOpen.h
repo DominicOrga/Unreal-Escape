@@ -24,6 +24,8 @@ public:
 
 	void CloseDoor();
 
+	float GetTotalMassOfActorsOnPlate();
+
 private:
 	UPROPERTY(EditAnywhere)
 	float OpenAngle = -90.f;
@@ -37,8 +39,4 @@ private:
 	float LastTimeDoorOpened;
 
 	bool bIsDoorOpen = false;
-
-	// A pawn authorized to open the door
-	AActor* AuthorizedActor;
-
 };

@@ -29,7 +29,7 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 
 	DrawLineTraceDebugLine();
 
-	// Update the grabbed component location based on the end of the line trace.
+	// Update the grabbed component location based at the end of the line trace.
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetGrabReachLineEnd());

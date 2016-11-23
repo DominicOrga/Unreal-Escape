@@ -10,6 +10,20 @@ class UNREALESCAPE_API UDoorOpen : public UActorComponent
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY(EditAnywhere)
+		float OpenAngle = -90.f;
+
+	UPROPERTY(EditAnywhere)
+		float DoorCloseDelay = 1.f;
+
+	UPROPERTY(EditAnywhere)
+		ATriggerVolume* PressurePlate = nullptr;
+
+	float LastTimeDoorOpened;
+
+	bool bIsDoorOpen = false;
+
 public:	
 	// Sets default values for this component's properties
 	UDoorOpen();
@@ -25,18 +39,4 @@ public:
 	void CloseDoor();
 
 	float GetTotalMassOfActorsOnPlate();
-
-private:
-	UPROPERTY(EditAnywhere)
-	float OpenAngle = -90.f;
-
-	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 1.f;
-
-	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
-
-	float LastTimeDoorOpened;
-
-	bool bIsDoorOpen = false;
 };

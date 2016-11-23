@@ -17,6 +17,11 @@ UDoorOpen::UDoorOpen()
 void UDoorOpen::BeginPlay() 
 {
 	Super::BeginPlay();
+
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has no Trigger Volume attached to Door Open Component."), *GetOwner()->GetName());
+	}
 }
 
 
@@ -25,26 +30,29 @@ void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	if (PressurePlate != NULL) 
+	if (!PressurePlate)
 	{
-		// Opens the door when the authorized actor collides with the pressure plate
-		if (GetTotalMassOfActorsOnPlate() > 20.f) 
-		{ 
-			OpenDoor(); 
-		}
+		return;
+	}
 
-		// Checks if the door is open and closes it after a specified amount of time
-		if (bIsDoorOpen) 
+	// Opens the door when the authorized actor collides with the pressure plate
+	if (GetTotalMassOfActorsOnPlate() > 20.f) 
+	{ 
+		OpenDoor(); 
+	}
+
+	// Checks if the door is open and closes it after a specified amount of time
+	if (bIsDoorOpen) 
+	{
+		float CurrentTime = GetWorld()->GetTimeSeconds();
+		float ElapsedTime = CurrentTime - LastTimeDoorOpened;
+
+		if (ElapsedTime >= DoorCloseDelay) 
 		{
-			float CurrentTime = GetWorld()->GetTimeSeconds();
-			float ElapsedTime = CurrentTime - LastTimeDoorOpened;
-
-			if (ElapsedTime >= DoorCloseDelay) 
-			{
-				CloseDoor();
-			}
+			CloseDoor();
 		}
 	}
+
 }
 
 void UDoorOpen::OpenDoor() 
@@ -64,6 +72,11 @@ float UDoorOpen::GetTotalMassOfActorsOnPlate()
 {
 	float TotalMass = 0.f;
 
+	if (!PressurePlate) 
+	{ 
+		return TotalMass; 
+	}
+
 	// Find all the overlapping actors. 
 	TArray<AActor*> OverlappingActors;
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
@@ -71,10 +84,6 @@ float UDoorOpen::GetTotalMassOfActorsOnPlate()
 	// Iterate through them and sum up their masses.
 	for (const AActor* Actor : OverlappingActors)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Overlapping Actor: %s, weight = %.2f"), 
-			*Actor->GetName(), 
-			Actor->GetRootPrimitiveComponent()->GetMass());
-
 		TotalMass += Actor->GetRootPrimitiveComponent()->GetMass();
 	}
 

@@ -5,6 +5,8 @@
 #include "Components/ActorComponent.h"
 #include "DoorOpen.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALESCAPE_API UDoorOpen : public UActorComponent
 {
@@ -12,17 +14,16 @@ class UNREALESCAPE_API UDoorOpen : public UActorComponent
 
 private:
 	UPROPERTY(EditAnywhere)
-		float OpenAngle = -90.f;
-
-	UPROPERTY(EditAnywhere)
-		float DoorCloseDelay = 1.f;
-
-	UPROPERTY(EditAnywhere)
 		ATriggerVolume* PressurePlate = nullptr;
 
-	float LastTimeDoorOpened;
+	UPROPERTY(EditAnywhere)
+		float TriggerMass;
 
-	bool bIsDoorOpen = false;
+	UPROPERTY(BlueprintAssignable)
+		FDoorEvent OnDoorOpen;
+
+	UPROPERTY(BlueprintAssignable)
+		FDoorEvent OnDoorClose;
 
 public:	
 	// Sets default values for this component's properties
@@ -33,10 +34,6 @@ public:
 	
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-
-	void OpenDoor();
-
-	void CloseDoor();
 
 	float GetTotalMassOfActorsOnPlate();
 };

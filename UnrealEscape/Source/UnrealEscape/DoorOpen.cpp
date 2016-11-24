@@ -36,36 +36,14 @@ void UDoorOpen::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	}
 
 	// Opens the door when the authorized actor collides with the pressure plate
-	if (GetTotalMassOfActorsOnPlate() > 20.f) 
+	if (GetTotalMassOfActorsOnPlate() > TriggerMass) 
 	{ 
-		OpenDoor(); 
+		OnDoorOpen.Broadcast();
 	}
-
-	// Checks if the door is open and closes it after a specified amount of time
-	if (bIsDoorOpen) 
+	else
 	{
-		float CurrentTime = GetWorld()->GetTimeSeconds();
-		float ElapsedTime = CurrentTime - LastTimeDoorOpened;
-
-		if (ElapsedTime >= DoorCloseDelay) 
-		{
-			CloseDoor();
-		}
+		OnDoorClose.Broadcast();
 	}
-
-}
-
-void UDoorOpen::OpenDoor() 
-{
-	GetOwner()->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
-	LastTimeDoorOpened = GetWorld()->GetTimeSeconds();
-	bIsDoorOpen = true;
-}
-
-void UDoorOpen::CloseDoor() 
-{
-	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
-	bIsDoorOpen = false;
 }
 
 float UDoorOpen::GetTotalMassOfActorsOnPlate()

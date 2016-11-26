@@ -7,4 +7,4 @@ Unreal Escape is a prototype Unreal Engine project made mostly with C++ and some
 
 Its purpose is to test and demonstrate the rudimentary relationship between C++ and blueprint coding, such as creating events within c++ and make it accessible within blueprints, while allowing blueprint to initialize the properties of a c++ object, and etc.
 
-The prototype exhibits the carrying objects and opening doors based on the sum of the all the object's mass in a specified trigger volume.
+The prototype exhibits object transferring and opening doors based on the sum of the all the object's mass placed on a specified trigger volume.
